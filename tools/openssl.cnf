@@ -29,27 +29,14 @@ organizationalUnitName = Organizational Unit Name
 commonName			       = Common Name
 emailAddress			     = Email Address
 
-countryName_default             = US
-stateOrProvinceName_default     = WA
-localityName_default            =
-0.organizationName_default      = SeanK Corp
-organizationalUnitName_default  =
-emailAddress_default            =
-
 [ v3_ca ]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
 keyUsage = keyCertSign
-basicConstraints = critical, CA:true, pathlen:1
+#basicConstraints = critical, CA:true, pathlen:1
+basicConstraints = critical, CA:true
 
 [ v3_intermediate_ca ]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid:always,issuer
 keyUsage = keyCertSign
-basicConstraints = critical, CA:true, pathlen:1
+basicConstraints = critical, CA:true
 
 [ device_cert ]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer:always
-keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth

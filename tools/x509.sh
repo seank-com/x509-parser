@@ -74,13 +74,9 @@ function generate_leaf_cert()
 
     openssl ec -in ${device_base_name}.pkkey.pem -out ${device_base_name}.key.pem
 
-#    openssl ec -in ${device_base_name}.key.pem -outform der -out ${device_base_name}.key.der
-
     cat ${device_base_name}.cert.pem \
       ${parent_ca_base_name}.chain.cert.pem > ${device_base_name}.chain.cert.pem
 
-#    openssl x509 -in ${device_base_name}.chain.cert.pem \
-#      -outform der -out ${device_base_name}.chain.cert.der
   fi
 
   rm -f ${device_base_name}.pkkey.pem

@@ -5,14 +5,77 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MSR
-
 #include "hsm_client_data.h"
+#include "x509.h"
+#include "pem2bin.h"
 
 typedef struct CUSTOM_HSM_INFO_TAG
 {
     int info;
 } CUSTOM_HSM_INFO;
+
+static const char* s_certificate =
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBPDCB4qADAgECAgkAk/eZ6AyAmjwwCgYIKoZIzj0EAwIwGTEXMBUGA1UEAwwO\r\n"
+"Y29udHJhY3Rvci1pY2EwHhcNMTgwNDA1MjM0ODA3WhcNMjgwNDAyMjM0ODA3WjAV\r\n"
+"MRMwEQYDVQQDDApzZWFuay10ZXN0MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\r\n"
+"ZW+hmWPHA5vqHLb+2jG98x+yYvUNolhIAEl077YbCxixHfiHB/bKnSwFs5ABPTj3\r\n"
+"JYeQWnt5qTwxPIaFFGEm16MXMBUwEwYDVR0lBAwwCgYIKwYBBQUHAwIwCgYIKoZI\r\n"
+"zj0EAwIDSQAwRgIhAKxYRmy/PDA9I5AnONzTehHOSJJo5dt+MTJVbSHSZ6utAiEA\r\n"
+"m8YTL9hrsol4HTZU0xlRM2CaSg3gAM5pf27mu4thHWM=\r\n"
+"-----END CERTIFICATE-----\r\n"
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBRTCB7KADAgECAgkAtQ06po5V84swCgYIKoZIzj0EAwIwFjEUMBIGA1UEAwwL\r\n"
+"ZmFjdG9yeS1pY2EwHhcNMTgwNDA1MjM0ODAzWhcNMjgwNDAyMjM0ODAzWjAZMRcw\r\n"
+"FQYDVQQDDA5jb250cmFjdG9yLWljYTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IA\r\n"
+"BKxOndWPzdwzxeveRG6S3nkioa3SfKGESin181r3eXQybrXzhwJ/Tk1wamqhL8GL\r\n"
+"c8v834TkzMqxOed+8zlyZDWjIDAeMAsGA1UdDwQEAwICBDAPBgNVHRMBAf8EBTAD\r\n"
+"AQH/MAoGCCqGSM49BAMCA0gAMEUCIHPnPDtWlHnU6+27D7N3PebKMeJW2zlV8WOu\r\n"
+"ojxtov4AAiEAqudHidclgtrA7ZmgLFWituNVhtRnoGFtr8djwc75508=\r\n"
+"-----END CERTIFICATE-----\r\n"
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBPjCB5aADAgECAgkAmgxM4KR7rtcwCgYIKoZIzj0EAwIwEjEQMA4GA1UEAwwH\r\n"
+"c2t1LWljYTAeFw0xODA0MDUyMzQ4MDBaFw0yODA0MDIyMzQ4MDBaMBYxFDASBgNV\r\n"
+"BAMMC2ZhY3RvcnktaWNhMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsGHMvedY\r\n"
+"ShGgg03AA+CeHbw3qEh3tVbJrpPhVzh7xXL3R4yI7P9/1Nl70M4Am/9HJjb13n1Q\r\n"
+"iNnyG2tEg1+esqMgMB4wCwYDVR0PBAQDAgIEMA8GA1UdEwEB/wQFMAMBAf8wCgYI\r\n"
+"KoZIzj0EAwIDSAAwRQIhAIn8PjJR0iXGIFeKC8tcQCktL56+bMeQgjUtkbTMk5+L\r\n"
+"AiAaW1ES2wu+HLC/CUqY1BjiSBeUq+AOCxBid8GS7MzU3A==\r\n"
+"-----END CERTIFICATE-----\r\n"
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBPzCB5aADAgECAgkA88Z6QcqFIvowCgYIKoZIzj0EAwIwFjEUMBIGA1UEAwwL\r\n"
+"cHJvZHVjdC1pY2EwHhcNMTgwNDA1MjM0NzU2WhcNMjgwNDAyMjM0NzU2WjASMRAw\r\n"
+"DgYDVQQDDAdza3UtaWNhMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoEmSdKx5\r\n"
+"2NqOxACTFli60dsGVSk1DHhQ8OnZP+KMAEmiNeOmgSOIOzxKSIChDrgObO+BNYaG\r\n"
+"RzmBU3wBFn2r3aMgMB4wCwYDVR0PBAQDAgIEMA8GA1UdEwEB/wQFMAMBAf8wCgYI\r\n"
+"KoZIzj0EAwIDSQAwRgIhAKPKFxpYji2xZXlEpohoy/gfH/n+CyMTAn7m6xIIuRwH\r\n"
+"AiEAgJLiL68vwjoJqLUp70WrYrkq4PW0vXj8lFsWGFgSYYs=\r\n"
+"-----END CERTIFICATE-----\r\n"
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBRDCB66ADAgECAgkA1oQZrXKZE0QwCgYIKoZIzj0EAwIwGDEWMBQGA1UEAwwN\r\n"
+"c2Vhbmstcm9vdC1jYTAeFw0xODA0MDUyMzQ3NTNaFw0yODA0MDIyMzQ3NTNaMBYx\r\n"
+"FDASBgNVBAMMC3Byb2R1Y3QtaWNhMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE\r\n"
+"ABSieNiVZaZ6PlY6sN/cSD7rNk0UQbtps8Abf/LJ3ZJndEGFUPrlFr2dO5zp4IdX\r\n"
+"8dPAYG84FxB2wHbQJZ+dP6MgMB4wCwYDVR0PBAQDAgIEMA8GA1UdEwEB/wQFMAMB\r\n"
+"Af8wCgYIKoZIzj0EAwIDSAAwRQIhAIZuUmp7YUxrnlrdBPSZDim8YAk3N9RyPmf9\r\n"
+"fDAqyf4zAiAwEZvhuJl8O8wfZtWiBMqPHUV2hvPu8aiDYYbbmQXHFA==\r\n"
+"-----END CERTIFICATE-----\r\n"
+"-----BEGIN CERTIFICATE-----\r\n"
+"MIIBRzCB7aADAgECAgkAotrHnwYyOI4wCgYIKoZIzj0EAwIwGDEWMBQGA1UEAwwN\r\n"
+"c2Vhbmstcm9vdC1jYTAeFw0xODA0MDUyMzQ3NDlaFw0yODA0MDIyMzQ3NDlaMBgx\r\n"
+"FjAUBgNVBAMMDXNlYW5rLXJvb3QtY2EwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNC\r\n"
+"AARsPBukfg97bXTM1WkPTehJDXiG0US2CSJG1/hMn38uOOuV2v6apIp/4Ws12NwB\r\n"
+"nFnIRU5St/9c/ZX9YJiF58ChoyAwHjALBgNVHQ8EBAMCAgQwDwYDVR0TAQH/BAUw\r\n"
+"AwEB/zAKBggqhkjOPQQDAgNJADBGAiEAkAmsv2GKpD9l+tqDmMbeHdn+dN7dPx+b\r\n"
+"ivFZ8rIzgZgCIQDd9TRityYhG4XJD2mKH1d2Rx1WESxCLSxLRkpnlwqgwQ==\r\n"
+"-----END CERTIFICATE-----\r\n";
+
+static const char* s_private_key =
+"-----BEGIN EC PRIVATE KEY-----\r\n"
+"MHcCAQEEIDxc8zENslY0CrH4RYKU6db39Df9G1ViLU/23B9LF2hroAoGCCqGSM49\r\n"
+"AwEHoUQDQgAEZW+hmWPHA5vqHLb+2jG98x+yYvUNolhIAEl077YbCxixHfiHB/bK\r\n"
+"nSwFs5ABPTj3JYeQWnt5qTwxPIaFFGEm1w==\r\n"
+"-----END EC PRIVATE KEY-----\r\n";
 
 HSM_CLIENT_HANDLE custom_hsm_create()
 {
@@ -72,89 +135,14 @@ char* custom_hsm_get_certificate(HSM_CLIENT_HANDLE handle)
         CUSTOM_HSM_INFO* cust_hsm = (CUSTOM_HSM_INFO*)handle;
         cust_hsm->info++;
 
-        const char* cert =
-#ifdef MSR
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIICIDCCAcagAwIBAgIFCgsMDQ4wCgYIKoZIzj0EAwIwOzEZMBcGA1UEAww\r\n"
-          "QcmlvdC1zaWduZXItY29yZTELMAkGA1UEBgwCVVMxETAPBgNVBAoMCE1TUl\r\n"
-          "9URVNUMB4XDTE3MDEwMTAwMDAwMFoXDTM3MDEwMTAwMDAwMFowOzEZMBcGA\r\n"
-          "1UEAwwQcmlvdC1kZXZpY2UtY2VydDELMAkGA1UEBgwCVVMxETAPBgNVBAoM\r\n"
-          "CE1TUl9URVNUMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEXl8k/JM5Trr\r\n"
-          "d+T2hCzH8J8FzdMo+nqEBctNE0wUQWesM+QbsF1PBmEHxb/FpqegLlleJW4\r\n"
-          "niMxaN8z3J7T/imKOBtjCBszATBgNVHSUEDDAKBggrBgEFBQcDAjCBmwYGZ\r\n"
-          "4EFBQQBBIGQMIGNAgEBMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdgvx\r\n"
-          "WvX6LURj6RDfdXUY30+4hz8gZ6cf25VifQhb3wPuuZTxr09nLslUYdF42qA\r\n"
-          "6VsIUj1fym6mLv2K6agLvvTAtBglghkgBZQMEAgEEIGvpsYTJN8KOEi7uUS\r\n"
-          "to6o4Aw90VnqToXoTLqWb0Rs1OMAoGCCqGSM49BAMCA0gAMEUCIFFcPW654\r\n"
-          "5a5BNP+yn9U/c0MwemXvzddylFa0KbDtANfAiEAuqG9PPKcd3Fntf5c2icX\r\n"
-          "fIFRXtSWOpZcR8iNnFwtN5g=\r\n"
-          "-----END CERTIFICATE-----\r\n"
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIIBhTCCASugAwIBAgIFDg0MCwowCgYIKoZIzj0EAwIwNDESMBAGA1UEAww\r\n"
-          "JcmlvdC1yb290MQswCQYDVQQGDAJVUzERMA8GA1UECgwITVNSX1RFU1QwHh\r\n"
-          "cNMTcwMTAxMDAwMDAwWhcNMzcwMTAxMDAwMDAwWjA7MRkwFwYDVQQDDBBya\r\n"
-          "W90LXNpZ25lci1jb3JlMQswCQYDVQQGDAJVUzERMA8GA1UECgwITVNSX1RF\r\n"
-          "U1QwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR2C/Fa9fotRGPpEN91dRj\r\n"
-          "fT7iHPyBnpx/blWJ9CFvfA+65lPGvT2cuyVRh0XjaoDpWwhSPV/KbqYu/Yr\r\n"
-          "pqAu+9oyMwITALBgNVHQ8EBAMCAAQwEgYDVR0TAQH/BAgwBgEB/wIBATAKB\r\n"
-          "ggqhkjOPQQDAgNIADBFAiBRXD1uueOWuQTT/sp/VP3NDMHpl783XcpRWtCm\r\n"
-          "w7QDXwIhAKOszfUHSFg/pp+MMtaHk9msAxWOR+00HJy7V4pv/MiO\r\n"
-          "-----END CERTIFICATE-----\r\n";
-#else
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIIBvjCCAWOgAwIBAgIJAP8jKiMxIzK3MAoGCCqGSM49BAMCMB0xGzAZBgNVBAMM\r\n"
-          "EnNhbXBsZS1mYWN0b3J5LWljYTAeFw0xODA0MDIyMzE3NDdaFw0yODAzMzAyMzE3\r\n"
-          "NDdaMBcxFTATBgNVBAMMDHNlYW5rLXNhbXBsZTBZMBMGByqGSM49AgEGCCqGSM49\r\n"
-          "AwEHA0IABLNkK763FXer/wX/Hvn1ySxC5t7LsAHdxdrqXEQlTiXvtw/Yog6EGnLk\r\n"
-          "B3jEuAJYsaRuoY9YFq1sTyZsBrA7uR6jgZEwgY4wHQYDVR0OBBYEFEqJEZ8asHmX\r\n"
-          "oj/lbXxkADupbuwEMEsGA1UdIwREMEKAFO4RdMYYPCDSV8jpWO+anPF9+fA5oR+k\r\n"
-          "HTAbMRkwFwYDVQQDDBBkZW1vLXByb2R1Y3QtaWNhggkAmHws32VsRgcwCwYDVR0P\r\n"
-          "BAQDAgWgMBMGA1UdJQQMMAoGCCsGAQUFBwMCMAoGCCqGSM49BAMCA0kAMEYCIQCY\r\n"
-          "S9wDIdgFK6rUJuqRDOYEenfwBr4KKeB3CKgW07iupQIhAOTMQfQx4JUTFK34bbhe\r\n"
-          "CU7HVZX0i+ecNmzVMERNPnD/\r\n"
-          "-----END CERTIFICATE-----\r\n"
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIIBkjCCATigAwIBAgIJAJh8LN9lbEYHMAoGCCqGSM49BAMCMBsxGTAXBgNVBAMM\r\n"
-          "EGRlbW8tcHJvZHVjdC1pY2EwHhcNMTgwNDAyMjMxNzE1WhcNMjgwMzMwMjMxNzE1\r\n"
-          "WjAdMRswGQYDVQQDDBJzYW1wbGUtZmFjdG9yeS1pY2EwWTATBgcqhkjOPQIBBggq\r\n"
-          "hkjOPQMBBwNCAAQa05c77NGwOsaV1JBP1QvFye/OtfnUFRr7tZ1PtV8vMOQROPfT\r\n"
-          "odbyVsGAtT5Y12iO6rI/F1XVIyQaNFZxd6Ebo2MwYTAdBgNVHQ4EFgQU7hF0xhg8\r\n"
-          "INJXyOlY75qc8X358DkwHwYDVR0jBBgwFoAUg6y8T2+dic9IiRJe0exAyW7brOow\r\n"
-          "CwYDVR0PBAQDAgIEMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYIKoZIzj0EAwIDSAAw\r\n"
-          "RQIgQhpWYnpyAO5GwloPLK9/bm9YMgt77olJ1nQz0S4KcjECIQCHKNM6DfILLbrk\r\n"
-          "GrRyFd0HGwMSPVMkKU9+NGYuAOvo2g==\r\n"
-          "-----END CERTIFICATE-----\r\n"
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIIBjTCCATOgAwIBAgIJAJXjc3ZoTU/9MAoGCCqGSM49BAMCMBgxFjAUBgNVBAMM\r\n"
-          "DXNlYW5rLXJvb3QtY2EwHhcNMTgwNDAyMjMxNzAwWhcNMjgwMzMwMjMxNzAwWjAb\r\n"
-          "MRkwFwYDVQQDDBBkZW1vLXByb2R1Y3QtaWNhMFkwEwYHKoZIzj0CAQYIKoZIzj0D\r\n"
-          "AQcDQgAEgW25GUiOxJKZUNb1Q+m2poNS3NvwW6IHmu4KoDpJOU7O6qxZukr6LecW\r\n"
-          "xEjSr9NrBlt7T6uO2ja3pEF9qZuBEKNjMGEwHQYDVR0OBBYEFIOsvE9vnYnPSIkS\r\n"
-          "XtHsQMlu26zqMB8GA1UdIwQYMBaAFO9mFEq1fwiYgEB2OTwYngxIkab1MAsGA1Ud\r\n"
-          "DwQEAwICBDASBgNVHRMBAf8ECDAGAQH/AgEBMAoGCCqGSM49BAMCA0gAMEUCIH+R\r\n"
-          "yTiFEUf7VbCu8TFkRhcezvKptHkOS6OtkOor35cfAiEAwLV6j7t4rqHlFxg7o08i\r\n"
-          "GyVFW7Iu5Ir1SZ2+4HEp2Nw=\r\n"
-          "-----END CERTIFICATE-----\r\n"
-          "-----BEGIN CERTIFICATE-----\r\n"
-          "MIIBijCCATCgAwIBAgIJAJ/xeEIhc7RCMAoGCCqGSM49BAMCMBgxFjAUBgNVBAMM\r\n"
-          "DXNlYW5rLXJvb3QtY2EwHhcNMTgwNDAyMjMxNjQzWhcNMjgwMzMwMjMxNjQzWjAY\r\n"
-          "MRYwFAYDVQQDDA1zZWFuay1yb290LWNhMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcD\r\n"
-          "QgAEbll3j/gbznswO//QyMjoRwW8xpmoKi7h7r9SAV6Ltj1BQ1h2u6fApGFVK0jz\r\n"
-          "iLxxW+no27bBjR2dhTCscnw9vKNjMGEwHQYDVR0OBBYEFO9mFEq1fwiYgEB2OTwY\r\n"
-          "ngxIkab1MB8GA1UdIwQYMBaAFO9mFEq1fwiYgEB2OTwYngxIkab1MAsGA1UdDwQE\r\n"
-          "AwICBDASBgNVHRMBAf8ECDAGAQH/AgEBMAoGCCqGSM49BAMCA0gAMEUCIQCrHCjI\r\n"
-          "X9q6a7EjCELb349gHel9pHdAIZG+wALjwTqsQAIgfrQd0f8DxJK19sh4epAuRF0L\r\n"
-          "DU0OIuKLhq8j+JOxYG8=\r\n"
-          "-----END CERTIFICATE-----\r\n";
-#endif
-        if (cert == NULL)
+        if (s_certificate == NULL)
         {
             (void)printf("Failure retrieving cert");
             result = NULL;
         }
         else
         {
-            size_t length = strlen(cert);
+            size_t length = strlen(s_certificate);
             result = malloc(length + 1);
             if (result == NULL)
             {
@@ -162,7 +150,7 @@ char* custom_hsm_get_certificate(HSM_CLIENT_HANDLE handle)
             }
             else
             {
-                strcpy(result, cert);
+                strcpy(result, s_certificate);
             }
         }
     }
@@ -183,29 +171,14 @@ char* custom_hsm_get_alias_key(HSM_CLIENT_HANDLE handle)
         CUSTOM_HSM_INFO* cust_hsm = (CUSTOM_HSM_INFO*)handle;
         cust_hsm->info++;
 
-        const char* private_key =
-#ifdef MSR
-          "-----BEGIN EC PRIVATE KEY-----\r\n"
-          "MHcCAQEEINXd3WSS7LqDEFGdpbQi0V51w01XkpMVPUYlG9V7/ldUoAoGCCq\r\n"
-          "GSM49AwEHoUQDQgAEXl8k/JM5Trrd+T2hCzH8J8FzdMo+nqEBctNE0wUQWe\r\n"
-          "sM+QbsF1PBmEHxb/FpqegLlleJW4niMxaN8z3J7T/imA==\r\n"
-          "-----END EC PRIVATE KEY-----\r\n";
-#else
-          "-----BEGIN EC PRIVATE KEY-----\r\n"
-          "MHcCAQEEIA0Q2CpMECAHfNPPjUH+Y6gX+T8HUOwkdZ+KDcMiEd0NoAoGCCqGSM49\r\n"
-          "AwEHoUQDQgAEs2QrvrcVd6v/Bf8e+fXJLELm3suwAd3F2upcRCVOJe+3D9iiDoQa\r\n"
-          "cuQHeMS4AlixpG6hj1gWrWxPJmwGsDu5Hg==\r\n"
-          "-----END EC PRIVATE KEY-----\r\n";
-#endif
-
-        if (private_key == NULL)
+        if (s_private_key == NULL)
         {
             (void)printf("Failure retrieving private key");
             result = NULL;
         }
         else
         {
-            size_t length = strlen(private_key);
+            size_t length = strlen(s_private_key);
             result = malloc(length + 1);
             if (result == NULL)
             {
@@ -213,7 +186,7 @@ char* custom_hsm_get_alias_key(HSM_CLIENT_HANDLE handle)
             }
             else
             {
-                strcpy(result, private_key);
+                strcpy(result, s_private_key);
             }
         }
     }
@@ -231,17 +204,29 @@ char* custom_hsm_get_common_name(HSM_CLIENT_HANDLE handle)
     }
     else
     {
+        static char common_name[129] = { 0 };
+
         CUSTOM_HSM_INFO* cust_hsm = (CUSTOM_HSM_INFO*)handle;
         cust_hsm->info++;
 
-        const char* common_name =
-#ifdef MSR
-          "riot-device-cert";
-#else
-          "seank-sample";
-#endif
+        if (s_certificate != NULL)
+        {
+          uint8_t* bin;
+          uint32_t binlen;
+          size_t length = strlen(s_certificate);
+          int hr = pem2bin(s_certificate, length, &bin, &binlen);
+          if (hr == 0)
+          {
+            hr = getCommonName(bin, common_name, 128);
+            if (hr != 0)
+            {
+              common_name[0] = '\0';
+            }
+            free(bin);
+          }
+        }
 
-        if (common_name == NULL)
+        if (common_name[0] == '\0')
         {
             (void)printf("Failure retrieving common name");
             result = NULL;
@@ -257,6 +242,7 @@ char* custom_hsm_get_common_name(HSM_CLIENT_HANDLE handle)
             else
             {
                 strcpy(result, common_name);
+                result[length] = '\0';
             }
         }
     }

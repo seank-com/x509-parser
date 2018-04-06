@@ -5,6 +5,9 @@ CFLAGS=\
 
 SOURCES=\
 	custom_hsm.c \
+	base64.c \
+	pem2bin.c \
+	x509.c \
 
 OBJECTS=$(SOURCES:.c=.o)
 
