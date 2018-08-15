@@ -1,6 +1,6 @@
 # x509-parser
 
-The purpose of the code in this repo is to read the Common Name from an x509 leaf certificate in an embedded device where openssl and wolfssl are not available. This code will be used in a [custom hsm](https://docs.microsoft.com/en-us/azure/iot-dps/use-hsm-with-sdk) for a port of the [Azure IoT SDK C](https://github.com/Azure/azure-iot-sdk-c) to enable connecting through Azure [Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/).
+The purpose of the code in this repo is to read the Common Name from an x509 leaf certificate in an embedded device where openssl and wolfssl are not available. This code will be used in a [custom hsm](https://docs.microsoft.com/en-us/azure/iot-dps/use-hsm-with-sdk) for a port of the [Azure IoT SDK C](https://github.com/Azure/azure-iot-sdk-c) to enable connecting through Azure [Device Provisioning Service](https://docs.microsoft.com/en-us/azure/iot-dps/). Specifics on [how to manage device enrollments with Azure portal](https://docs.microsoft.com/en-us/azure/iot-dps/how-to-manage-enrollments) and [controlling device access to the provisioning service with X.509 certificates](https://docs.microsoft.com/en-us/azure/iot-dps/concepts-security#intermediate-certificate) is helpful to understand the process.
 
 ## Building
 
@@ -157,7 +157,7 @@ $
 
 ### Testing your Certificates
 
-To test your certificates, open the custom_hsm/custom_hsm.c file and copy the contents of your XXXXXXX.device.chain.cert.pem and XXXXXXX.device.key.pem into the static strings at the top. Next, update the sed command in the Dockerfile to replace ```[ID Scope]``` with the scope id of your Device PRovisioning Service. Save and then run the following command from a terminal to test.
+To test your certificates, open the custom_hsm/custom_hsm.c file and copy the contents of your XXXXXXX.device.chain.cert.pem and XXXXXXX.device.key.pem into the static strings at the top. Next, update the sed command in the Dockerfile to replace ```[ID Scope]``` with the scope id of your Device Provisioning Service. Save and then run the following command from a terminal to test.
 
 ```bash
 $ docker build -t azure-iot-sdk-c .
