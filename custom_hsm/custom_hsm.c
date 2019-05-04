@@ -16,18 +16,38 @@ typedef struct CUSTOM_HSM_INFO_TAG
 
 static const char* s_certificate =
 "-----BEGIN CERTIFICATE-----\r\n"
-"Your complete...\r\n"
+"MIIBNjCB3qADAgECAgkA5cOSJdwEK48wCgYIKoZIzj0EAwIwFjEUMBIGA1UEAwwL\r\n"
+"cHJvZHVjdC1pY2EwHhcNMTkwNTAzMjMzODI4WhcNMjkwNDMwMjMzODI4WjAUMRIw\r\n"
+"EAYDVQQDDAlzZWFuay1kcHMwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASSQu8r\r\n"
+"yDHPeFEohSn3HwTI37DyFu2CGoPjEicfYyTWnpuKc0P/H5a4aukpjsrzxIwuKZRz\r\n"
+"9xyJwshxSpRBUJKNoxcwFTATBgNVHSUEDDAKBggrBgEFBQcDAjAKBggqhkjOPQQD\r\n"
+"AgNHADBEAiB5uy1KEdfV1VFHc4PQncXsnT16nLka1LzLdZQEHBan6QIgA6NjzGtd\r\n"
+"Momsjlkhu1OkiuVGrGSInV4djcl7yxVNiJ0=\r\n"
 "-----END CERTIFICATE-----\r\n"
 "-----BEGIN CERTIFICATE-----\r\n"
-"...certificate chain...\r\n"
+"MIIBQDCB5qADAgECAgkAg1EQ7SJpcLYwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwI\r\n"
+"c2VhbmstY2EwHhcNMTkwNTAzMjMzNDAwWhcNMjkwNDMwMjMzNDAwWjAWMRQwEgYD\r\n"
+"VQQDDAtwcm9kdWN0LWljYTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABH/dt89X\r\n"
+"f5s42C/yoYwGKAjOb16VZxCmzYC4nRP5kz4WqYLE1yr37JRs7nztRV8HlUX1/uQ1\r\n"
+"JSONeyaWJ9PjprSjIDAeMAsGA1UdDwQEAwICBDAPBgNVHRMBAf8EBTADAQH/MAoG\r\n"
+"CCqGSM49BAMCA0kAMEYCIQCaYH5CuiNyZ4qe7zShw38l9WSDRJdEML9kumwDG/9i\r\n"
+"jwIhAIbokxDmjYVmjUCam0H8ET0Zg87+qE6nVYyhFYsgvmPA\r\n"
 "-----END CERTIFICATE-----\r\n"
 "-----BEGIN CERTIFICATE-----\r\n"
-"...goes here.\r\n"
+"MIIBOzCB46ADAgECAgkA9hHBy07V8REwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwI\r\n"
+"c2VhbmstY2EwHhcNMTkwNTAzMjMzMzIzWhcNMjkwNDMwMjMzMzIzWjATMREwDwYD\r\n"
+"VQQDDAhzZWFuay1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABAjSoSCwta24\r\n"
+"zbPIPDMrIm3xMJpz5lgUZEIeMifl7Y2utHK3B8s8LLPb2XF1ko9UhMaxDXhd5jPh\r\n"
+"olQO+CCcFKyjIDAeMAsGA1UdDwQEAwICBDAPBgNVHRMBAf8EBTADAQH/MAoGCCqG\r\n"
+"SM49BAMCA0cAMEQCIH4cbN8kblkfp/CNfbzGI2J3aBE0ss8HmpHaY7UEKZBMAiAP\r\n"
+"n4lzrBZkOcLRtTlu5hGKllzQ4fzQepzwQmexRoCQtg==\r\n"
 "-----END CERTIFICATE-----\r\n";
 
 static const char* s_private_key =
 "-----BEGIN EC PRIVATE KEY-----\r\n"
-"Your private key goes here\r\n"
+"MHcCAQEEICA0Ybk5zD6n0oaeYlk35qvi2JG3BhodCkFuap5bT5zuoAoGCCqGSM49\r\n"
+"AwEHoUQDQgAEkkLvK8gxz3hRKIUp9x8EyN+w8hbtghqD4xInH2Mk1p6binND/x+W\r\n"
+"uGrpKY7K88SMLimUc/ccicLIcUqUQVCSjQ==\r\n"
 "-----END EC PRIVATE KEY-----\r\n";
 
 HSM_CLIENT_HANDLE custom_hsm_create()
