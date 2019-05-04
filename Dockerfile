@@ -15,7 +15,7 @@ RUN \
   gcc --version && \
   mkdir /src && \
   cd /src && \
-  git clone -b 2018-03-16 --recursive https://github.com/Azure/azure-iot-sdk-c.git && \
+  git clone -b 2019-03-18 --recursive https://github.com/Azure/azure-iot-sdk-c.git && \
   cd /src/azure-iot-sdk-c && \
   mkdir cmake
 
@@ -32,7 +32,7 @@ COPY azure-iot-sdk/dice_device_enrollment.c \
   /src/azure-iot-sdk-c/provisioning_client/tools/dice_device_enrollment/dice_device_enrollment.c
 
 RUN \
-  sed -i -e 's/\[ID Scope\]/0ne00012BA4/g' $sample
+  sed -i -e 's/\[ID Scope\]/0ne000226FE/g' $sample
 
 WORKDIR /src
 
