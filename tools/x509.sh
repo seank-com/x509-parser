@@ -84,8 +84,8 @@ function generate_leaf_cert()
 
 usage()
 {
-  echo "Usage: createCA ca_base_name common_name"
-  echo "       createICA parent_ca_base_name ica_base_name common_name"
+  echo "Usage: createCA ca_base_name"
+  echo "       createICA parent_ca_base_name ica_base_name"
   echo "       createDevice parent_ca_base_name device_name"
   echo "       verify ca_base_name verification_code"
   echo "       dump filename"

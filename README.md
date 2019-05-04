@@ -29,8 +29,8 @@ Running the script without parameters will give you a quick overview of the funn
 
 ```bash
 $ ./x509.sh
-Usage: createCA ca_base_name common_name
-       createICA parent_ca_base_name ica_base_name common_name
+Usage: createCA ca_base_name
+       createICA parent_ca_base_name ica_base_name
        createDevice parent_ca_base_name device_name
        verify ca_base_name verification_code
        dump filename
