@@ -77,6 +77,9 @@ function generate_leaf_cert()
     cat ${device_base_name}.cert.pem \
       ${parent_ca_base_name}.chain.cert.pem > ${device_base_name}.chain.cert.pem
 
+    echo "Thumbprint to use for registering with IoTHub"
+    openssl x509 -in ${device_base_name}.chain.cert.pem -noout -fingerprint -sha256 | tr -d ":"
+
   fi
 
   rm -f ${device_base_name}.pkkey.pem
